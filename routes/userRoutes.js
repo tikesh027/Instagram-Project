@@ -1,10 +1,11 @@
 const express = require('express');
 const { body } = require('express-validator');
 
-const { registerUser, logIn, searchAllUsers, getUserById, updateUser, followUser, unfollowUser, suggestions, suggestionsUser } = require('../Controllers/userController');
+const { registerUser, logIn, searchAllUsers, getUserById, updateUser, followUser, unfollowUser, suggestions, suggestionsUser, savepost, unsavepost, getallsavedpost } = require('../Controllers/userController');
 const { authMiddleware } = require('../Middleware/authMiddleware');
 const { userValidator, logInValidator } = require('../Middleware/Validators/validator');
 const { notification } = require('../Controllers/notificationController');
+const { post, getPosts, updatePerticularPost, getPerticularPosts, deletePost, like, unlike, userPosts } = require('../Controllers/postController');
 const router = express.Router();
 
 router.post('/register', userValidator ,registerUser);
@@ -16,6 +17,17 @@ router.patch('/user/:id/follow', authMiddleware, followUser);
 router.patch('/user/:id/unfollow', authMiddleware, unfollowUser);
 router.get('/suggestionsUser', authMiddleware, suggestionsUser);
 router.get('/notification', authMiddleware, notification);
+router.post('/posts', authMiddleware, post);
+router.get('/posts', authMiddleware, getPosts);
+router.patch('/post/:id', authMiddleware, updatePerticularPost);
+router.get('/post/:id', authMiddleware, getPerticularPosts);
+router.delete('/post/:id', authMiddleware, deletePost);
+router.patch('/post/:id/like', authMiddleware, like);
+router.patch('/post/:id/unlike', authMiddleware, unlike);
+router.get('/user_posts/:id', authMiddleware, userPosts);
+router.patch('/savepost/:id', authMiddleware, savepost);
+router.patch('/unsavepost/:id', authMiddleware, unsavepost);
+router.get('/getsavedpost', authMiddleware, getallsavedpost);
 
 module.exports = router;
 

@@ -3,26 +3,27 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
     content: {
-        type: String,
+        type: Schema.Types.String,
         require: true
     },
     image: {
-        type: Array,
+        type: Schema.Types.Array,
         require: true
     },
     like: {
-        type: ObjectId,
-        require: true
+        type: [Schema.Types.ObjectId],
+        ref: 'User'
     },
     comments: {
-        type: ObjectId,
-        require: true
+        type: [Schema.Types.ObjectId],
+        ref: 'User'
     },
     user: {
-        type: ObjectId,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         require: true
     }
-});
+}, { timestamps: true });
 
 const Post = mongoose.model('Post', PostSchema);
 module.exports = Post;

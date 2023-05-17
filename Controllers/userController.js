@@ -140,7 +140,7 @@ exports.searchAllUsers = async (req, res, next) => {
     res.status(200).json(user);
     return;
   } catch (error) {
-    res.status(400).json({ msg: "internal server error" });
+    res.status(500).json({ msg: "internal server error" });
     return;
   }
 };
@@ -156,7 +156,7 @@ exports.getUserById = async (req, res, next) => {
     users.password = "";
     res.status(200).json({ user: users });
   } catch (error) {
-    res.status(400).json({ msg: "internal Server error" });
+    res.status(500).json({ msg: "internal Server error" });
     return;
   }
 };
@@ -196,10 +196,10 @@ exports.followUser = async (req, res, next) => {
           following: userId,
         },
       },
-      { new: true, populate: ['following'] }
+      { new: true, populate: ["following"] }
     );
     console.log(follow);
-    res.status(200).json({ msg: 'Updated Success', user: follow });
+    res.status(200).json({ msg: "Updated Success", user: follow });
   } catch (error) {
     console.log(error);
     res.status(400).json({ msg: "Internal Server Error" });
@@ -211,34 +211,84 @@ exports.unfollowUser = async (req, res, next) => {
   const userId = req.params.id;
   const currentUserId = req.userId;
 
-  try{
+  try {
     const unfollowUser = await User.findByIdAndUpdate(
-      {_id: currentUserId},
+      { _id: currentUserId },
       {
         $pull: {
-          following: userId
-        }
+          following: userId,
+        },
       },
-      {new: true, populate: ['following']}
+      { new: true, populate: ["following"] }
     );
     res.status(200).json({ msg: "You Followed this User", user: unfollowUser });
     return;
-  }
-  catch(error){
-    res.status(400).json({ msg: "Internal Server Error" })
+  } catch (error) {
+    res.status(400).json({ msg: "Internal Server Error" });
     return;
   }
 };
 
 exports.suggestionsUser = async (req, res, next) => {
+  try {
+    const suggestions = await User.findById(
+      req.userId,
+      {},
+      { populate: ["follower", "following"] }
+    );
+    res.status(200).json({ user: suggestions });
+    return;
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal server error" });
+    return;
+  }
+};
+
+exports.savepost = async (req, res, next) => {
+  const postId = req.params.id;
+  const currentId = req.userId;
+  try {
+    const savepost = await User.findByIdAndUpdate(
+      currentId,
+      { $addToSet: { saved: postId } },
+      { new: true }
+    );
+    console.log(currentId);
+    res.status(200).json(savepost);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal server error" });
+    return;
+  }
+};
+
+exports.unsavepost = async (req, res, next) => {
+  const postId = req.params.id;
+  const currentId = req.userId;
+  try {
+    const unsavepost = await User.findByIdAndUpdate(
+      currentId,
+      { $pull: { saved: postId } },
+      { new: true }
+    );
+    res.status(200).json(unsavepost);
+    return;
+  } catch (error) {
+    res.status(500).json({ msg: "Internal Server Error" });
+    return;
+  }
+};
+
+exports.getallsavedpost = async (req, res, next) => {
+  const userId = req.userId;
   try{
-    const suggestions = await User.findById(req.userId,{},{populate:['follower', 'following']})
-    res.status(200).json({user: suggestions});
+    const allsavespost = await User.find({_id: userId}, {}, {populate: 'saved'}).select(['saved']);
+    res.status(200).json(allsavespost);
     return;
   }
   catch(error){
-    console.log(error);
-    res.status(500).json({ msg: "Internal server error" });
+    res.status(500).json({ msg: "Internal Server error" });
     return;
   }
 };
