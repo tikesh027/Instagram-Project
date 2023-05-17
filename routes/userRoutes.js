@@ -1,9 +1,10 @@
 const express = require('express');
 const { body } = require('express-validator');
 
-const { registerUser, logIn, searchAllUsers, getUserById, updateUser } = require('../Controllers/userController');
+const { registerUser, logIn, searchAllUsers, getUserById, updateUser, followUser, unfollowUser, suggestions, suggestionsUser } = require('../Controllers/userController');
 const { authMiddleware } = require('../Middleware/authMiddleware');
 const { userValidator, logInValidator } = require('../Middleware/Validators/validator');
+const { notification } = require('../Controllers/notificationController');
 const router = express.Router();
 
 router.post('/register', userValidator ,registerUser);
@@ -11,6 +12,10 @@ router.post('/login', logInValidator, logIn);
 router.get('/search', authMiddleware, searchAllUsers);
 router.get('/user/:id', authMiddleware, getUserById);
 router.patch('/user', authMiddleware, updateUser);
+router.patch('/user/:id/follow', authMiddleware, followUser);
+router.patch('/user/:id/unfollow', authMiddleware, unfollowUser);
+router.get('/suggestionsUser', authMiddleware, suggestionsUser);
+router.get('/notification', authMiddleware, notification);
 
 module.exports = router;
 

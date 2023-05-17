@@ -49,6 +49,7 @@ const UserSchema = new Schema({
   follower: {
     type: [Schema.Types.ObjectId],
     ref: 'User',
+    unique: true,
     require: true,
   },
   following: {

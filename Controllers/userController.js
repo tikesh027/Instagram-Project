@@ -162,24 +162,83 @@ exports.getUserById = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-    const {avatar, fullname, mobile, address, story, website, gender} = req.body;
+  const { avatar, fullname, mobile, address, story, website, gender } =
+    req.body;
   try {
-    const user = await User.findByIdAndUpdate(req.userId, {
-      avatar: avatar,
-      fullname: fullname,
-      mobile: mobile,
-      address: address,
-      story: story,
-      website: website,
-      gender: gender,
-    },{new:true});
-    // if(user){
-    //   res.status(200).json({ msg: "Updated Succesfully" });
-    //   return;
-    // }
-    res.status(200).json({ user: user });
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        avatar: avatar,
+        fullname: fullname,
+        mobile: mobile,
+        address: address,
+        story: story,
+        website: website,
+        gender: gender,
+      },
+      { new: true }
+    );
+    res.status(200).json({ user: user, msg: "Update Success" });
   } catch (error) {
     res.status(400).json({ msg: "internal server Error" });
+    return;
+  }
+};
+
+exports.followUser = async (req, res, next) => {
+  const userId = req.params.id;
+  const currentUserId = req.userId;
+  try {
+    const follow = await User.findByIdAndUpdate(
+      { _id: currentUserId },
+      {
+        $addToSet: {
+          following: userId,
+        },
+      },
+      { new: true, populate: ['following'] }
+    );
+    console.log(follow);
+    res.status(200).json({ msg: 'Updated Success', user: follow });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ msg: "Internal Server Error" });
+    return;
+  }
+};
+
+exports.unfollowUser = async (req, res, next) => {
+  const userId = req.params.id;
+  const currentUserId = req.userId;
+
+  try{
+    const unfollowUser = await User.findByIdAndUpdate(
+      {_id: currentUserId},
+      {
+        $pull: {
+          following: userId
+        }
+      },
+      {new: true, populate: ['following']}
+    );
+    res.status(200).json({ msg: "You Followed this User", user: unfollowUser });
+    return;
+  }
+  catch(error){
+    res.status(400).json({ msg: "Internal Server Error" })
+    return;
+  }
+};
+
+exports.suggestionsUser = async (req, res, next) => {
+  try{
+    const suggestions = await User.findById(req.userId,{},{populate:['follower', 'following']})
+    res.status(200).json({user: suggestions});
+    return;
+  }
+  catch(error){
+    console.log(error);
+    res.status(500).json({ msg: "Internal server error" });
     return;
   }
 };
