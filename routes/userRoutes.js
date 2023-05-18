@@ -6,6 +6,7 @@ const { authMiddleware } = require('../Middleware/authMiddleware');
 const { userValidator, logInValidator } = require('../Middleware/Validators/validator');
 const { notification } = require('../Controllers/notificationController');
 const { post, getPosts, updatePerticularPost, getPerticularPosts, deletePost, like, unlike, userPosts } = require('../Controllers/postController');
+const { createComments, updateComment, likeacomment, unlikeacomment, deleteacomment } = require('../Controllers/commentController');
 const router = express.Router();
 
 router.post('/register', userValidator ,registerUser);
@@ -28,6 +29,11 @@ router.get('/user_posts/:id', authMiddleware, userPosts);
 router.patch('/savepost/:id', authMiddleware, savepost);
 router.patch('/unsavepost/:id', authMiddleware, unsavepost);
 router.get('/getsavedpost', authMiddleware, getallsavedpost);
+router.post('/comment', authMiddleware, createComments);
+router.post('/comment/:id', authMiddleware, updateComment);
+router.post('/comment/:id/like', authMiddleware, likeacomment);
+router.post('/comment/:id/unlike', authMiddleware, unlikeacomment);
+router.delete('/comment/:id', authMiddleware, deleteacomment);
 
 module.exports = router;
 

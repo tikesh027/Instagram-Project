@@ -1,6 +1,4 @@
 const Post = require("../Model/post");
-const User = require("../Model/user");
-const { populate } = require("../Model/user");
 
 exports.post = async (req, res, next) => {
   const currentId = req.userId;
