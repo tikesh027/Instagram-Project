@@ -255,7 +255,7 @@ exports.savepost = async (req, res, next) => {
       { new: true }
     );
     console.log(currentId);
-    res.status(200).json(savepost);
+    res.status(200).json({msg: "saved post", savepost});
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal server error" });
@@ -272,7 +272,7 @@ exports.unsavepost = async (req, res, next) => {
       { $pull: { saved: postId } },
       { new: true }
     );
-    res.status(200).json(unsavepost);
+    res.status(200).json({msg: "unsaved post", unsavepost});
     return;
   } catch (error) {
     res.status(500).json({ msg: "Internal Server Error" });
@@ -284,7 +284,7 @@ exports.getallsavedpost = async (req, res, next) => {
   const userId = req.userId;
   try{
     const allsavespost = await User.find({_id: userId}, {}, {populate: 'saved'}).select(['saved']);
-    res.status(200).json(allsavespost);
+    res.status(200).json({savedpost: allsavespost});
     return;
   }
   catch(error){
