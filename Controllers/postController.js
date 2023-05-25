@@ -24,10 +24,25 @@ exports.post = async (req, res, next) => {
 
 exports.getPosts = async (req, res, next) => {
   try {
-    const post = await Post.find({}, {}, { populate: ["user"] });
+    const post = await Post.find(
+      {},
+      {},
+      {
+        populate: [
+          "user",
+          {
+            path: "comments",
+            populate: {
+              path: "user",
+            },
+          },
+        ],
+      }
+    );
     res.status(200).json({ msg: "Success", post });
     return;
   } catch (error) {
+    console.log(error);
     res.status(400).json({ msg: "Internal Server Error" });
   }
 };

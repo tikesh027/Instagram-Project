@@ -3,10 +3,12 @@ const uri = 'mongodb+srv://tikeshsingh2797:kitesinthesky@cluster0.8bb0fhd.mongod
 const express = require('express');
 const bodyParser = require('body-parser');
 const Mongoose = require('mongoose');
+const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(userRoutes);

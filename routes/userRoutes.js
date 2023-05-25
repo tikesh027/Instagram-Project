@@ -23,7 +23,7 @@ router.get('/posts', authMiddleware, getPosts);
 router.patch('/post/:id', authMiddleware, updatePerticularPost);
 router.get('/post/:id', authMiddleware, getPerticularPosts);
 router.delete('/post/:id', authMiddleware, deletePost);
-router.patch('/post/:id/like', authMiddleware, like);
+router.get('/post/:id/like', authMiddleware, like);
 router.patch('/post/:id/unlike', authMiddleware, unlike);
 router.get('/user_posts/:id', authMiddleware, userPosts);
 router.patch('/savepost/:id', authMiddleware, savepost);
