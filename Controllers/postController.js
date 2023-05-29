@@ -2,14 +2,21 @@ const Post = require("../Model/post");
 
 exports.post = async (req, res, next) => {
   const currentId = req.userId;
-  const { content, image } = req.body;
+  const { content } = req.body;
+  console.log(req.files);
+  const imagePaths = [];
+  if(req.files && req.files.length){
+    req.files.forEach((image) => {
+      imagePaths.push(image.filename);
+    });
+  }
   try {
     const newPost = new Post({
       comments: [],
       like: [],
       user: currentId,
       content: content,
-      image: image,
+      image: imagePaths,
     });
     const post = await newPost.save();
     const populatedPost = await post.populate("user");
@@ -24,25 +31,10 @@ exports.post = async (req, res, next) => {
 
 exports.getPosts = async (req, res, next) => {
   try {
-    const post = await Post.find(
-      {},
-      {},
-      {
-        populate: [
-          "user",
-          {
-            path: "comments",
-            populate: {
-              path: "user",
-            },
-          },
-        ],
-      }
-    );
+    const post = await Post.find({}, {}, { populate: ["user", "comments"] }).sort({ createdAt: -1 });
     res.status(200).json({ msg: "Success", post });
     return;
   } catch (error) {
-    console.log(error);
     res.status(400).json({ msg: "Internal Server Error" });
   }
 };
@@ -119,6 +111,7 @@ exports.deletePost = async (req, res, next) => {
 };
 
 exports.like = async (req, res, next) => {
+  console.log("here=====>");
   const postId = req.params.id;
   try {
     const likePost = await Post.findByIdAndUpdate(

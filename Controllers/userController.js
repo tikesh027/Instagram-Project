@@ -292,3 +292,22 @@ exports.getallsavedpost = async (req, res, next) => {
     return;
   }
 };
+
+exports.getLoggedInUserInfo = async (req, res, next) => {
+  const userId = req.userId;
+  try{
+    const userData = await User.findById(userId, {} , {
+      populate: ['saved']
+    });
+    const response = {
+      msg: 'Success',
+      userData: userData
+    }
+    res.status(200).json(response);
+    return;
+  }
+  catch(error){
+    res.status(500).json({ msg: "Internal Server error", error });
+    return;
+  }
+}

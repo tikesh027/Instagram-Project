@@ -14,11 +14,11 @@ exports.createComments = async (req, res, next) => {
       likes: [],
       user: userId,
     });
-    const savedComment = await newComment.save();
+    const savedCommnet = await newComment.save();
     if (!reply) {
       const addCommentToPost = await Post.findByIdAndUpdate(postId, {
         $addToSet: {
-          comments: savedComment._id,
+          comments: savedCommnet._id,
         },
       });
     }
@@ -27,7 +27,7 @@ exports.createComments = async (req, res, next) => {
         reply,
         {
           $addToSet: {
-            reply: savedComment._id,
+            reply: savedCommnet._id,
           },
         },
         { new: true, populate: ["reply"] }
