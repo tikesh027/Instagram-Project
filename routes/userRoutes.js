@@ -76,7 +76,7 @@ router.get("/suggestionsUser", authMiddleware, suggestionsUser);
 router.get("/notification", authMiddleware, notification);
 router.post("/posts", authMiddleware, upload.array("image", 2), post);
 router.get("/posts", authMiddleware, getPosts);
-router.patch("/post/:id", authMiddleware, updatePerticularPost);
+router.post("/post/:id", authMiddleware,upload.array("image", 2), updatePerticularPost);
 router.get("/post/:id", authMiddleware, getPerticularPosts);
 router.delete("/post/:id", authMiddleware, deletePost);
 router.get("/post/:id/like", authMiddleware, like);

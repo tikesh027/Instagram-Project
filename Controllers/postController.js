@@ -42,18 +42,24 @@ exports.getPosts = async (req, res, next) => {
 exports.updatePerticularPost = async (req, res, next) => {
   const postId = req.params.id;
   //   const currentUserId = req.userId;
-  const { content, image } = req.body;
+  const { content } = req.body;
+  const imagePaths = [];
+  if(req.files && req.files.length){
+    req.files.forEach((image) => {
+      imagePaths.push(image.filename);
+    });
+  }
   try {
     let contentToBeUpdated = {};
     const excludeValues = [];
-    if (image && content) {
+    if (imagePaths.length && content) {
       contentToBeUpdated = {
         content: content,
-        image: image,
+        image: imagePaths,
       };
-    } else if (image) {
+    } else if (imagePaths.length) {
       contentToBeUpdated = {
-        image: image,
+        image: imagePaths,
       };
       excludeValues.push("-content");
     } else {
@@ -62,6 +68,7 @@ exports.updatePerticularPost = async (req, res, next) => {
       };
       excludeValues.push("-image");
     }
+    console.log(contentToBeUpdated, req.body)
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
       contentToBeUpdated,
