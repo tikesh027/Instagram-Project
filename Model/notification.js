@@ -3,31 +3,31 @@ const Schema = mongoose.Schema;
 
 const NotificationSchema = new Schema({
     user: {
-        type: [Schema.Types.ObjectId],
-        require: true
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
     },
     recipient: {
-        type: [Schema.Types.ObjectId],
+        type: Schema.Types.ObjectId,
         require: true
     },
     url: {
-        type: [Schema.Types.String],
+        type: Schema.Types.String,
         require: true
     },
     text: {
-        type: [Schema.Types.String],
+        type: Schema.Types.String,
         require: true
     },
     content: {
-        type: [Schema.Types.String],
+        type: Schema.Types.String,
         require: true
     },
     image: {
-        type: [Schema.Types.String],
+        type: Schema.Types.String,
         require: true
     },
     isRead: {
-        type: [Schema.Types.Boolean],
+        type: Schema.Types.Boolean,
         require: true
     }
 });
