@@ -22,7 +22,7 @@ const {
   userValidator,
   logInValidator,
 } = require("../Middleware/Validators/validator");
-const { notification, getAllNotifications } = require("../Controllers/notificationController");
+const { notification, getAllNotifications, removeNotification, deleteAllNotification } = require("../Controllers/notificationController");
 const {
   post,
   getPosts,
@@ -92,6 +92,10 @@ router.post("/comment/:id/unlike", authMiddleware, unlikeacomment);
 router.delete("/comment/:id", authMiddleware, deleteacomment);
 router.post("/notification", authMiddleware, notification);
 router.get('/notifications', authMiddleware, getAllNotifications);
+router.delete('/notification/:id', authMiddleware, removeNotification);
+router.delete('/deleteAllNotification', authMiddleware, deleteAllNotification);
+
+
 module.exports = router;
 
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDYyNWNmYmUwYjllYzg2MjIxMjUxYzIiLCJlbWFpbCI6InRpa2VzaDIzQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiYmhhdmVzaDA1MDUiLCJ0aW1lc3RhbXAiOiIyMDIzLTA1LTE1VDE3OjU3OjUwLjI3NFoiLCJpYXQiOjE2ODQxNzM0NzAsImV4cCI6MTY4NDE3NzA3MH0.IRBd70zguGQtL4pGwawGcq68kSd9578NtEgdG4x-Gqk

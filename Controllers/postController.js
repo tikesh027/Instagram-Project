@@ -5,7 +5,7 @@ exports.post = async (req, res, next) => {
   const { content } = req.body;
   console.log(req.files);
   const imagePaths = [];
-  if(req.files && req.files.length){
+  if (req.files && req.files.length) {
     req.files.forEach((image) => {
       imagePaths.push(image.filename);
     });
@@ -28,14 +28,40 @@ exports.post = async (req, res, next) => {
     return;
   }
 };
-
+const populateReplies = async (comment) => {
+  const populatedComment = await comment.populate("reply").execPopulate();
+  const populatedReplies = await Promise.all(
+    populatedComment.reply.map((reply) => populateReplies(reply))
+  );
+  return { ...populatedComment._doc, reply: populatedReplies };
+};
 exports.getPosts = async (req, res, next) => {
   try {
-    const post = await Post.find({}, {}, { populate: ["user", "comments"] }).sort({ createdAt: -1 });
+    const post = await Post.find(
+      {},
+      {},
+      {
+        populate: [
+          {
+            path: "comments",
+            populate: "user",
+          },
+          "user"
+        ],
+      }
+    ).sort({ createdAt: -1 });
+    // let comments = [];
+    // for(const p of post){
+    //   for (const c of p.comments) {
+    //    comments = await populateReplies(c);
+    //    console.log(comments);
+    //   }
+    // }
     res.status(200).json({ msg: "Success", post });
     return;
   } catch (error) {
-    res.status(400).json({ msg: "Internal Server Error" });
+    console.log(error);
+    res.status(400).json({ msg: "Internal Server Error", error });
   }
 };
 
@@ -44,7 +70,7 @@ exports.updatePerticularPost = async (req, res, next) => {
   //   const currentUserId = req.userId;
   const { content } = req.body;
   const imagePaths = [];
-  if(req.files && req.files.length){
+  if (req.files && req.files.length) {
     req.files.forEach((image) => {
       imagePaths.push(image.filename);
     });
@@ -68,7 +94,7 @@ exports.updatePerticularPost = async (req, res, next) => {
       };
       excludeValues.push("-image");
     }
-    console.log(contentToBeUpdated, req.body)
+    console.log(contentToBeUpdated, req.body);
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
       contentToBeUpdated,

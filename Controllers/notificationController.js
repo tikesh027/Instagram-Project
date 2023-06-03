@@ -50,3 +50,15 @@ exports.getAllNotifications = async (req, res, next) => {
     return;
   }
 };
+
+exports.deleteAllNotification = async (req, res, next) => {
+  try{
+    const userId = req.userId;
+    const deletedNotification = await Notification.deleteMany({ recipient: {$eq: userId} });
+    res.status(200).json({msg: 'Done', notification: deletedNotification})
+  }
+  catch(error){
+    res.status(500).json({ msg: "Internal Server Error" });
+    return;
+  }
+}
