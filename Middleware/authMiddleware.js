@@ -5,7 +5,7 @@ const { JWT_TOKEN_SALT } = require('../constant/constant');
 exports.authMiddleware = (req, res, next) => {
     const authToken = req.get('X-Authorization');
     if(!authToken){
-        res.status(200).json({ msg: "Invalid Authentication" });
+        res.status(400).json({ msg: "Invalid Authentication" });
         return;
     };
 
