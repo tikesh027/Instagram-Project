@@ -129,6 +129,18 @@ exports.logIn = async (req, res, next) => {
   }
 };
 
+exports.logOutUser = async (req, res, next) => {
+  try{
+    res.status(200).json({ msg: "LogOut Success" });
+    return;
+  }
+  catch(error){
+    console.log(error);
+    res.status(500).json({ msg: "internal Server Error" })
+    return;
+  }
+}
+
 exports.searchAllUsers = async (req, res, next) => {
   try {
     const user = await User.find().select([

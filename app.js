@@ -9,14 +9,16 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 
 const app = express();
+
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
-    // preflightContinue: true,
-    allowedHeaders: ['Content-Type', 'X-Authorization']
+    "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204,
   })
 );
+
 app.use((req, res, next) => {
   console.log("=====>", req.url, req.method);
   next();

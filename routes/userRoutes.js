@@ -16,6 +16,7 @@ const {
   unsavepost,
   getallsavedpost,
   getLoggedInUserInfo,
+  logOutUser,
 } = require("../Controllers/userController");
 const { authMiddleware } = require("../Middleware/authMiddleware");
 const {
@@ -66,29 +67,30 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.post("/register", userValidator, registerUser);
 router.post("/login", logInValidator, logIn);
+router.post("/logout", authMiddleware, logOutUser);
 router.get("/search", authMiddleware, searchAllUsers);
 router.get("/user/:id", authMiddleware, getUserById);
 router.get("/loggedInUser", authMiddleware, getLoggedInUserInfo);
-router.patch("/user", authMiddleware, updateUser);
-router.get("/user/:id/follow", authMiddleware, followUser);
-router.get("/user/:id/unfollow", authMiddleware, unfollowUser);
+router.put("/user", authMiddleware, updateUser);
+router.put("/user/:id/follow", authMiddleware, followUser);
+router.put("/user/:id/unfollow", authMiddleware, unfollowUser);
 router.get("/suggestionsUser", authMiddleware, suggestionsUser);
 router.get("/notification", authMiddleware, notification);
 router.post("/posts", authMiddleware, upload.array("image", 2), post);
 router.get("/posts", authMiddleware, getPosts);
-router.post("/post/:id", authMiddleware,upload.array("image", 2), updatePerticularPost);
+router.put("/post/:id", authMiddleware,upload.array("image", 2), updatePerticularPost);
 router.get("/post/:id", authMiddleware, getPerticularPosts);
 router.delete("/post/:id", authMiddleware, deletePost);
-router.get("/post/:id/like", authMiddleware, like);
-router.get("/post/:id/unlike", authMiddleware, unlike);
+router.put("/post/:id/like", authMiddleware, like);
+router.put("/post/:id/unlike", authMiddleware, unlike);
 router.get("/user_posts/:id", authMiddleware, userPosts);
-router.get("/savepost/:id", authMiddleware, savepost);
-router.get("/unsavepost/:id", authMiddleware, unsavepost);
+router.put("/savepost/:id", authMiddleware, savepost);
+router.put("/unsavepost/:id", authMiddleware, unsavepost);
 router.get("/getsavedpost", authMiddleware, getallsavedpost);
 router.post("/comment", authMiddleware, createComments);
 router.post("/comment/:id", authMiddleware, updateComment);
-router.post("/comment/:id/like", authMiddleware, likeacomment);
-router.post("/comment/:id/unlike", authMiddleware, unlikeacomment);
+router.get("/comment/:id/like", authMiddleware, likeacomment);
+router.get("/comment/:id/unlike", authMiddleware, unlikeacomment);
 router.delete("/comment/:id", authMiddleware, deleteacomment);
 router.post("/notification", authMiddleware, notification);
 router.get('/notifications', authMiddleware, getAllNotifications);
